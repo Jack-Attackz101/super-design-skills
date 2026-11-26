@@ -45,13 +45,13 @@ ABOUT = {
 LICENSES = {"MengTo/Skills": "MIT", "emilkowalski/skills": "MIT", "Leonxlnx/taste-skill": "MIT", "INSANE0777/Awwwards-mcp": "MIT",
             "arla6ka/skills": "MIT", "lucasmarkes/hairline": "MIT", "codeswithroh/tastemaker": "MIT", "benjitaylor/skills": "MIT (stageshow/LICENSE)",
             "ConardLi/garden-skills": "MIT", "heydamir/unslop (CC BY 4.0)": "CC BY 4.0", "Anthropic marketing plugin (Apache 2.0)": "Apache 2.0",
-            "Anthropic design plugin 1.2.0": "Apache 2.0"}
+            "Anthropic design plugin 1.2.0": "Apache 2.0", "jakubkrehel/skills (MIT)": "MIT", "elayadesign/ai-design-skills (MIT)": "MIT"}
 URLS = {"MengTo/Skills": "https://github.com/MengTo/Skills", "emilkowalski/skills": "https://github.com/emilkowalski/skills",
         "Leonxlnx/taste-skill": "https://github.com/Leonxlnx/taste-skill", "INSANE0777/Awwwards-mcp": "https://github.com/INSANE0777/Awwwards-mcp",
         "arla6ka/skills": "https://github.com/arla6ka/skills", "lucasmarkes/hairline": "https://github.com/lucasmarkes/hairline",
         "codeswithroh/tastemaker": "https://github.com/codeswithroh/tastemaker", "benjitaylor/skills": "https://github.com/benjitaylor/skills",
         "ConardLi/garden-skills": "https://github.com/ConardLi/garden-skills", "heydamir/unslop (CC BY 4.0)": "https://github.com/heydamir/unslop",
-        "Anthropic marketing plugin (Apache 2.0)": "https://github.com/anthropics/knowledge-work-plugins", "Anthropic design plugin 1.2.0": "https://github.com/anthropics/knowledge-work-plugins"}
+        "Anthropic marketing plugin (Apache 2.0)": "https://github.com/anthropics/knowledge-work-plugins", "Anthropic design plugin 1.2.0": "https://github.com/anthropics/knowledge-work-plugins", "jakubkrehel/skills (MIT)": "https://github.com/jakubkrehel/skills", "elayadesign/ai-design-skills (MIT)": "https://github.com/elayadesign/ai-design-skills"}
 
 def main():
     c = catalog.load()
@@ -83,9 +83,11 @@ def main():
         for mod, s in c[k]["sources"].items(): by.setdefault(s, []).append(f"{k}/{mod}")
     for s, mods in sorted(by.items(), key=lambda x: -len(x[1])):
         name = f"[{s}]({URLS[s]})" if s in URLS else s
-        lic = LICENSES.get(s, "Not stated; check with the repo owner before sharing publicly")
+        lic = LICENSES[s]
         C.append(f"| {name} | {lic} | {len(mods)}: " + ", ".join(f"`{m}`" for m in sorted(mods)) + " |\n")
-    C.append("| Repo owner (uploaded) | Not stated; check before sharing publicly | `interview`, `agentation` |\n")
+    C.append("| [benjitaylor/agentation](https://github.com/benjitaylor/agentation) | PolyForm Shield 1.0.0 (`skills/agentation/LICENSE`) | the whole `agentation` skill, unchanged |\n")
+    C.append("| This pack (original) | MIT | the whole `interview` skill |\n")
     open(os.path.join(here, "CREDITS.md"), "w").write("".join(C))
     print("wrote SKILLS.md and CREDITS.md")
-main()
+if __name__ == "__main__":
+    main()

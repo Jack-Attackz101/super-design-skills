@@ -14,8 +14,9 @@ This pack merges skills by many authors. Each module keeps its original files, c
 | [lucasmarkes/hairline](https://github.com/lucasmarkes/hairline) | MIT | 2: `animate/hairline-adopt`, `animate/hairline-create` |
 | [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | MIT | 1: `design/tastemaker` |
 | [heydamir/unslop (CC BY 4.0)](https://github.com/heydamir/unslop) | CC BY 4.0 | 1: `design/unslop` |
-| BetterUI (uploaded by the repo owner) | Not stated; check with the repo owner before sharing publicly | 1: `design/better-ui` |
-| Landing Page system (uploaded by the repo owner) | Not stated; check with the repo owner before sharing publicly | 1: `landing-page/landing-page-design` |
+| [jakubkrehel/skills (MIT)](https://github.com/jakubkrehel/skills) | MIT | 1: `design/better-ui` |
+| [elayadesign/ai-design-skills (MIT)](https://github.com/elayadesign/ai-design-skills) | MIT | 1: `landing-page/landing-page-design` |
 | [ConardLi/garden-skills](https://github.com/ConardLi/garden-skills) | MIT | 1: `landing-page/web-design-engineer` |
 | [benjitaylor/skills](https://github.com/benjitaylor/skills) | MIT (stageshow/LICENSE) | 1: `demo/stageshow` |
-| Repo owner (uploaded) | Not stated; check before sharing publicly | `interview`, `agentation` |
+| [benjitaylor/agentation](https://github.com/benjitaylor/agentation) | PolyForm Shield 1.0.0 (`skills/agentation/LICENSE`) | the whole `agentation` skill, unchanged |
+| This pack (original) | MIT | the whole `interview` skill |

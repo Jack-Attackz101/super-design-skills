@@ -5,8 +5,9 @@ Copyright (c) 2026 Jack-Attackz101
 This license covers the files authored for this pack: each skill's top-level
 SKILL.md and SOURCES.md, the review rubric, judge protocol and screenshot script,
 the prototype gallery template, and the repository's scripts and documentation.
-Third-party modules under skills/*/modules/ keep their own licenses; see
-CREDITS.md and the license files inside each module.
+Third-party modules under skills/*/modules/ keep their own licenses, and the
+skills/agentation skill is under the PolyForm Shield License 1.0.0 in its own
+folder; see CREDITS.md and the license files inside each module.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

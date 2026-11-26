@@ -4,6 +4,8 @@ Twelve skills that make coding agents good at design: building and judging scree
 
 Works with Claude Code, Codex, Cursor, Gemini CLI, OpenCode and other agents that support skills, plus Claude.ai.
 
+**Website:** https://super-design-skills.vercel.app (built from `site/`; regenerate with `python3 scripts/build_site.py`).
+
 ## Install: give this repo to your agent
 
 Paste this into your coding agent:

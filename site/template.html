@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Super Design Skills</title>
+<meta name="description" content="Twelve design skills for your coding agent. Paste one prompt into Claude Code, Claude, Grok, Cursor, Codex or ChatGPT and it installs them: Super Design with a judge loop to 8/10, landing pages, prototypes, scroll sites, animation and more.">
+<meta property="og:title" content="Super Design Skills">
+<meta property="og:description" content="New skills for your agent. Paste one prompt and your agent installs twelve design skills, including Super Design, which judges its own work until it scores 8/10.">
+<meta name="theme-color" content="#F7F7F4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23E0391F' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Concept: a design crit. Paper, ink, and one red marker the judge uses to circle and score. */
+:root{
+  --paper:#F7F7F4; --panel:#FFFFFF; --ink:#101114; --muted:#5A5E68; --line:#DEDED7; --soft:#EEEEE9;
+  --red:#E0391F; --red-ink:#B8290F; --hi:#FFE45C; --ok:#1E7A4A;
+  --display:"Bricolage Grotesque", "Geist", system-ui, sans-serif;
+  --body:"Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --r:12px; --wrap:1180px;
+}
+@media (prefers-color-scheme: dark){ :root{
+  --paper:#0E0F11; --panel:#16181B; --ink:#ECECE7; --muted:#9A9EA7; --line:#272A2F; --soft:#1C1E22;
+  --red:#FF5A3D; --red-ink:#FF7A61; --hi:#E5C83A; --ok:#4CC488; color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;min-height:64px;padding-block:10px}
+.mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.01em}
+.mark{white-space:nowrap}
+@media (max-width:480px){.mark-x{display:none}}
+@media (max-width:380px){.top nav a.keep{display:none}}
+.mark i{width:18px;height:18px;border:3px solid var(--red);border-radius:50%;display:block}
+.top nav{margin-left:auto;display:flex;gap:22px;align-items:center;font-size:14.5px}
+.top nav a{text-decoration:none;color:var(--muted)}
+.top nav a:hover{color:var(--ink)}
+.gh{display:inline-flex;align-items:center;gap:6px;color:var(--ink)!important;border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--panel)}
+@media (max-width:720px){.top nav a:not(.gh):not(.keep){display:none}.top nav{gap:16px}}
+
+/* hero */
+.hero{padding:72px 0 40px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:56px;align-items:start}
+.hero aside{margin-top:18px}
+@media (max-width:960px){.hero .wrap{grid-template-columns:1fr;gap:40px}.hero{padding-top:40px}}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(46px,7.6vw,104px);line-height:.94;letter-spacing:-.035em;margin:0}
+h1 .for{display:block}
+.rot{display:flex;align-items:center;gap:.22em;height:1.04em;overflow:hidden;position:relative;margin-top:.06em}
+.rot-item{display:flex;align-items:center;gap:.22em;white-space:nowrap;position:absolute;left:0;top:0;height:1.04em;transform:translateY(110%);opacity:0;transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.rot-item.on{transform:translateY(0);opacity:1}
+.rot-item.off{transform:translateY(-110%);opacity:0}
+.rot-item .logo{width:.82em;height:.82em;flex:none}
+.rot-item span{position:relative}
+.rot-item span::after{content:"";position:absolute;left:-.04em;right:-.04em;bottom:.08em;height:.18em;background:var(--hi);z-index:-1;border-radius:2px;opacity:.85}
+.lede{font-size:clamp(17px,1.7vw,20px);color:var(--muted);max-width:40ch;margin:26px 0 0;line-height:1.5}
+.lede b{color:var(--ink);font-weight:600}
+
+.prompt{margin-top:30px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 16px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 0 rgba(0,0,0,.02),0 10px 30px -18px rgba(16,17,20,.35)}
+.prompt-label{font-size:13.5px;color:var(--muted);font-weight:500;margin:0 0 6px}
+.prompt-text{font-family:var(--mono);font-size:14.5px;line-height:1.5;color:var(--ink);overflow-wrap:normal;hyphens:none;margin:0;flex:1;min-width:0}
+.prompt-text a{color:var(--red-ink);text-decoration:none}
+.url,.nohy{hyphens:none;-webkit-hyphens:none;overflow-wrap:normal;word-break:normal}
+.nw{white-space:nowrap}
+.btn{text-decoration:none;justify-content:center;font:inherit;font-weight:600;font-size:15px;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:transform .12s ease,background .15s}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:var(--ink);color:var(--paper)}
+.btn-primary:hover{background:color-mix(in srgb,var(--ink) 86%,var(--red))}
+.btn-primary.done{background:var(--ok);color:#fff}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--ink)}
+@media (max-width:560px){.prompt{flex-direction:column;align-items:stretch}.prompt .btn{justify-content:center}}
+.under{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin-top:16px;font-size:14px;color:var(--muted)}
+.under a{color:var(--ink)}
+@media (max-width:560px){.under{flex-direction:column;align-items:flex-start;gap:6px}}
+
+.works{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.works li{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;border:1px solid var(--line);border-radius:999px;padding:5px 11px 5px 8px;background:var(--panel)}
+.works .logo{width:16px;height:16px}
+
+/* scorecard */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;position:relative}
+.score-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.score-head small{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.score-big{font-family:var(--display);font-weight:800;font-size:64px;line-height:1;letter-spacing:-.03em;margin:10px 0 2px;display:flex;align-items:baseline;gap:6px}
+.score-big sub{font-size:22px;color:var(--muted);font-weight:600;letter-spacing:0;vertical-align:baseline}
+.ring{position:absolute;right:22px;top:58px;width:84px;height:84px}
+.pass{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ok)}
+.pass::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.dims{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:9px}
+.dims li{display:grid;grid-template-columns:7.5rem 1fr 2.2rem;gap:10px;align-items:center;font-size:13px}
+.dims .bar{height:6px;border-radius:3px;background:var(--soft);overflow:hidden}
+.dims .bar i{display:block;height:100%;background:var(--ink);border-radius:3px}
+.dims .low .bar i{background:var(--red)}
+.dims b{font-family:var(--mono);font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+.note{font-size:12.5px;color:var(--muted);margin:16px 0 0;border-top:1px dashed var(--line);padding-top:12px}
+
+/* sections */
+section{padding:84px 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 56px;align-items:end;margin-bottom:36px}
+@media (max-width:860px){.sec-head{grid-template-columns:1fr}}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(34px,4.6vw,58px);line-height:1;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.sec-head p{color:var(--muted);margin:0;max-width:52ch;font-size:17px}
+.rule{border:0;border-top:1px solid var(--line);margin:0}
+
+/* skills grid */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.grid{grid-template-columns:1fr}}
+.grid{gap:0 28px}
+.skill{display:flex;flex-direction:column;gap:8px;min-height:190px;padding:22px 0 24px;border-top:1px solid var(--ink);text-decoration:none;color:inherit;position:relative}
+.skill:hover h3{color:var(--red-ink)}
+.skill .row{display:flex;gap:12px;align-items:baseline}
+.skill .no{font-family:var(--mono);font-size:13px;color:color-mix(in srgb,var(--ink) 72%,var(--paper));font-variant-numeric:tabular-nums}
+.skill .cmd{font-family:var(--mono);font-size:14px;color:var(--red-ink)}
+.skill h3{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:-.02em;line-height:1.05;margin:0}
+.skill p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.5}
+.skill .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:15px;color:var(--muted);padding-top:8px}
+.skill .go{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:background .15s,color .15s,border-color .15s}
+.skill:hover .go{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.grid{row-gap:14px}
+.skill.flag{grid-column:span 2;background:var(--ink);color:var(--paper);border:0;border-radius:16px;padding:22px 26px 24px}
+.skill.flag:hover h3{color:var(--paper)}
+.skill.flag .cmd{color:var(--hi)}
+.skill.flag p,.skill.flag .foot,.skill.flag .no{color:color-mix(in srgb,var(--paper) 70%,transparent)}
+.skill.flag h3{font-size:clamp(30px,3.4vw,44px)}
+.skill.flag .go{border-color:color-mix(in srgb,var(--paper) 30%,transparent)}
+.skill.flag:hover .go{background:var(--paper);color:var(--ink)}
+.skill.flag .circle{position:absolute;right:22px;top:20px;width:92px;height:92px;opacity:.95}
+@media (max-width:620px){.skill.flag{grid-column:auto}.skill.flag .circle{display:none}.grid{row-gap:0}.skill{min-height:0;padding:18px 52px 18px 0}.skill.flag{padding:22px 60px 22px 22px;margin-bottom:14px}.skill .foot>span:first-child{display:none}.skill .foot{position:absolute;right:0;top:50%;transform:translateY(-50%);padding:0;margin:0}.skill.flag .foot{right:14px}.skill h3{font-size:22px}.skill.get{padding-right:0}.skill.get .btn{margin-top:8px}}
+.skill.ext{border-top-style:dashed}
+.skill.get{border-top-color:var(--red)}
+.skill.get .prompt-mini{font-size:14.5px;color:var(--muted);margin:0}
+.skill.get .btn{min-height:44px}
+@media (max-width:620px){.grid .skill.get .btn{align-self:stretch;width:100%;min-height:52px}}
+.skill.get .btn{align-self:flex-start;margin-top:auto}
+.tag{font-size:12.5px;font-weight:500;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+
+/* judge loop */
+.loop{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:28px;align-items:start}
+@media (max-width:900px){.loop{grid-template-columns:1fr}}
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:3rem 1fr;gap:4px 14px;padding:18px 0;border-top:1px solid var(--line)}
+.steps li:last-child{border-bottom:1px solid var(--line)}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:13px;color:var(--red-ink);padding-top:3px}
+.steps b{font-family:var(--display);font-size:19px;font-weight:700;letter-spacing:-.01em;display:block}
+.steps span{grid-column:2;color:var(--muted);font-size:15px}
+.chart{padding:20px 20px 12px}
+.chart svg{display:block;width:100%;height:auto}
+.chart .cap{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted);margin-bottom:6px}
+
+/* install */
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.ways{grid-template-columns:1fr}}
+.ways{gap:0}
+.way{display:flex;flex-direction:column;gap:12px;padding:6px 28px 6px;border-left:1px solid var(--line);min-width:0}
+.way:first-child{border-left:0;padding-left:0}
+.way:last-child{padding-right:0}
+@media (min-width:901px){.way>p{min-height:4.7em}}
+.way .code{flex:1;width:100%;margin-top:0}
+.way .code pre{flex:1}
+@media (max-width:900px){.way{border-left:0;border-top:1px solid var(--line);padding:24px 0}.way:first-child{border-top:0;padding-top:0}}
+.way h3{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:-.01em;margin:0}
+.way p{margin:0;color:var(--muted);font-size:14.5px}
+.code{margin-top:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.code pre{margin:0;align-self:stretch;background:var(--soft);border-radius:9px;padding:13px 14px;font-family:var(--mono);font-size:13px;line-height:1.6;white-space:normal;hyphens:none}
+.code .ln{display:block}
+.code .ln::before{content:"$ ";color:var(--muted)}
+.code .btn{padding:0 16px;min-height:40px;font-size:13.5px;border-radius:8px}
+
+/* rea */
+.rea{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;padding:26px;border:1px dashed var(--line);border-radius:16px}
+.rea h3{font-family:var(--display);font-size:24px;margin:0;letter-spacing:-.01em;line-height:1.12}
+.rea p{margin:4px 0 0;color:var(--muted);font-size:15px;max-width:60ch}
+.rea .btn{min-height:44px}
+.rea h3{margin-bottom:12px}
+@media (max-width:700px){.rea{gap:12px}}
+.rea .big{font-family:var(--display);font-weight:800;font-size:44px;line-height:1;color:var(--red)}
+@media (max-width:700px){.rea{grid-template-columns:1fr}}
+
+/* detail view */
+.detail{padding:40px 0 90px}
+.crumbs{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:34px}
+.crumbs button,.crumbs a{font:inherit;font-size:14.5px;background:none;border:0;padding:0;color:var(--muted);cursor:pointer;text-decoration:none}
+.crumbs button:hover,.crumbs a:hover{color:var(--ink)}
+.d-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);grid-template-areas:"head side" "body side";column-gap:56px;align-items:start}
+.d-hero>.d-head{grid-area:head}.d-hero>.d-body{grid-area:body}
+.d-side{grid-area:side;align-self:stretch}
+.d-side-in{position:sticky;top:88px;display:grid;gap:16px}
+.d-install{display:block;margin:0}
+.flow{list-style:none;padding:0;margin:40px 0 0;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{counter-increment:f;position:relative;padding:34px 14px 0 0;font-size:14.5px;line-height:1.4}
+.flow li::before{content:counter(f,decimal-leading-zero);position:absolute;top:0;left:0;font-family:var(--mono);font-size:13px;color:var(--red-ink);background:var(--paper);padding-right:8px;z-index:1}
+.flow li::after{content:"";position:absolute;top:9px;left:0;right:0;height:1px;background:var(--ink)}
+.flow li:last-child{font-weight:600}
+.flow li:last-child::after{display:none}
+@media (max-width:700px){.flow{grid-template-columns:1fr;gap:14px}.flow li{padding:0 0 0 44px}.flow li::after{display:none}.flow li::before{top:1px}}
+.d-chart{margin-top:40px}
+.toc{display:grid;gap:2px;border-top:1px solid var(--line);padding-top:14px;font-size:14.5px}
+.toc b{color:var(--ink);font-weight:600;margin-bottom:4px}
+.toc a{color:var(--muted);text-decoration:none;padding:4px 0}
+.toc a:hover{color:var(--ink)}
+.d-body .pairs{display:none}
+.pairs{border-top:1px solid var(--line);padding-top:14px;font-size:14.5px;color:var(--muted)}
+.pairs b{display:block;color:var(--ink);font-weight:600;margin-bottom:6px}
+.pairs a{display:inline-flex;align-items:center;min-height:36px;font-family:var(--mono);font-size:13.5px;color:var(--red-ink);text-decoration:none;margin:0 14px 6px 0}
+@media (max-width:900px){.d-hero{grid-template-columns:1fr;grid-template-areas:"head" "side" "body"}.d-side-in{position:static}.d-side{margin-top:24px}.toc{display:none}.d-side .pairs{display:none}.d-body .pairs{display:block;margin-top:32px}}
+.d-install .btn{width:100%;justify-content:center;margin-top:14px;min-height:46px}
+.d-uses{margin-top:48px}
+.d-uses h3,.try h3,.mods-wrap h3{font-family:var(--display);font-size:22px;font-weight:700;margin:0 0 6px;letter-spacing:-.01em}
+.uses{border-top:1px solid var(--ink)}
+.uses li{padding:13px 0;border-bottom:1px solid var(--line)}
+.try{margin-top:40px;background:var(--ink);color:var(--paper);border-radius:16px;padding:24px}
+.try h3{color:var(--paper)}
+.try p{margin:0 0 14px;color:color-mix(in srgb,var(--paper) 65%,transparent);font-size:14.5px}
+.try .tries li{background:color-mix(in srgb,var(--paper) 8%,transparent);color:var(--paper)}
+.try .tries code::before{content:"> ";color:var(--hi)}
+.try .btn-primary{background:var(--paper);color:var(--ink)}
+.d-head .no{font-family:var(--mono);color:var(--muted);font-size:14px}
+.d-head .cmd{font-family:var(--mono);color:var(--red-ink);font-size:18px;margin-top:6px;display:block}
+.d-title{font-family:var(--display);font-weight:800;font-size:clamp(52px,9vw,120px);letter-spacing:-.04em;line-height:.92;margin:8px 0 0}
+.d-lead{font-size:clamp(18px,2vw,22px);line-height:1.5;max-width:58ch;margin:28px 0 0}
+.d-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:40px}
+@media (max-width:800px){.d-grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;min-width:0}
+.panel h3{font-family:var(--display);font-size:20px;font-weight:700;margin:0 0 14px;letter-spacing:-.01em}
+.uses{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.uses li{display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:15px}
+.uses li::before{content:"";width:10px;height:10px;border:2px solid var(--red);border-radius:50%;margin-top:6px}
+.tries{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.tries li{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:9px;padding:10px 10px 10px 14px}
+.tries code{font-family:var(--mono);font-size:13px;flex:1;min-width:0;overflow-wrap:anywhere}
+.tries .btn{padding:0 14px;font-size:13.5px;border-radius:8px;min-height:40px}
+@media (max-width:620px){.tries .btn,.code .btn{min-height:44px}}
+.mods{margin-top:14px}
+.mod-group{padding:18px 0;border-top:1px solid var(--line)}
+.mod-group:first-of-type{border-top:0;padding-top:4px}
+.mod-group h4{font-size:15px;color:var(--ink);margin:0 0 6px;font-weight:600}
+.mod{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:4px 20px;padding:9px 0;font-size:14px}
+details.mods-wrap{margin-top:40px}
+.mods-wrap .mod{grid-template-columns:minmax(0,13rem) minmax(0,1fr)}
+details.mods-wrap>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+details.mods-wrap>summary::-webkit-details-marker{display:none}
+details.mods-wrap>summary .btn{pointer-events:none}
+.mod code{font-family:var(--mono);font-size:13px}
+.mod span{color:var(--muted)}
+.mod small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+@media (max-width:700px){.mod{grid-template-columns:1fr}}
+.d-next{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:48px;border-top:1px solid var(--ink);padding-top:18px}
+@media (max-width:560px){.d-next b{font-size:18px}}
+.d-next a{display:block;padding:6px 0;text-decoration:none}
+.d-next a:hover b{color:var(--red-ink)}
+.d-next small{display:block;color:var(--muted);font-size:13px}
+.d-next b{font-family:var(--display);font-size:22px;letter-spacing:-.01em}
+.d-next .r{text-align:right}
+.cta{margin-top:56px}
+
+footer{border-top:1px solid var(--line);padding:44px 0 60px;font-size:14px;color:var(--muted)}
+footer .wrap{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px}
+@media (max-width:800px){footer .wrap{grid-template-columns:1fr}}
+footer p{margin:0 0 10px;max-width:62ch}
+footer a{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .25s;z-index:50}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="mark" href="#" data-home><i aria-hidden="true"></i>Super Design<span class="mark-x">&nbsp;Skills</span></a>
+    <nav aria-label="Main">
+      <a href="#skills" data-home-link>Skills</a>
+      <a href="#judge" data-home-link>Judge loop</a>
+      <a class="keep" href="#install" data-home-link>Install</a>
+      <a class="gh" href="{{REPO}}" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="home">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <h1><span class="for">New skills for</span><span class="rot" id="rot" aria-live="off"><span class="sr" id="rot-sr">your agent: Claude Code, Claude, Grok, Cursor, Codex and ChatGPT</span></span></h1>
+        <p class="lede">Twelve skills, one paste. Your agent learns to <b>build, judge and polish UI until it scores 8/10</b>, plus landing pages, prototypes, scroll sites, motion, brand and more.</p>
+        <div class="prompt">
+          <div style="flex:1;min-width:0">
+            <p class="prompt-label">Paste this into your agent</p>
+            <p class="prompt-text" id="install-prompt">Install the skills from <a class="url" href="{{REPO}}" target="_blank" rel="noopener"><span class="nw">https://github.com/</span><wbr><span class="nw">Jack-Attackz101/</span><wbr><span class="nw">super-design-skills</span></a> and tell me what I can do with them.</p>
+          </div>
+          <button class="btn btn-primary" type="button" data-copy="install-prompt" id="copy-main">Copy prompt</button>
+        </div>
+        <div class="under"><span>Free and open source</span><a href="#install" data-home-link>Other ways to install</a><a href="#skills" data-home-link>Browse the skills</a></div>
+        <ul class="works" aria-label="Works with">{{LOGOS}}</ul>
+      </div>
+      <aside class="card" aria-label="Example judge scorecard">
+        <div class="score-head"><strong>Judge · round 3</strong><small>/design</small></div>
+        <div class="score-big">8.2<sub>/10</sub></div>
+        <span class="pass">Pass</span>
+        <svg class="ring" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="34" fill="none" stroke="var(--soft)" stroke-width="7"/><circle cx="42" cy="42" r="34" fill="none" stroke="var(--red)" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.2 213.6" transform="rotate(-90 42 42)"/></svg>
+        <ul class="dims">
+          <li><span>Hierarchy</span><span class="bar"><i style="width:85%"></i></span><b>8.5</b></li>
+          <li><span>Typography</span><span class="bar"><i style="width:85%"></i></span><b>8.5</b></li>
+          <li><span>Originality</span><span class="bar"><i style="width:80%"></i></span><b>8.0</b></li>
+          <li><span>Responsive</span><span class="bar"><i style="width:80%"></i></span><b>8.0</b></li>
+          <li class="low"><span>Copy</span><span class="bar"><i style="width:72%"></i></span><b>7.2</b></li>
+        </ul>
+        <p class="note">Example scorecard. A fresh judge grades every round from screenshots only, so it can't be talked into a good score.</p>
+      </aside>
+    </div>
+  </div>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Twelve skills in one paste. Plus one more.</h2>
+        <p>Each big skill runs a full workflow and pulls in its mini skills only when it needs them, so your agent stays fast. Click any skill to see what it does, when to use it and what's inside.</p>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="judge">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>It doesn't grade its own homework.</h2>
+        <p>Super Design, Landing Page and Review share one rubric and one rule: the agent that builds the page never scores it.</p>
+      </div>
+      <div class="loop">
+        <ol class="steps">
+          <li><b>Shoot it</b><span>Desktop and phone screenshots, plus a check for anything spilling off the side of the screen.</span></li>
+          <li><b>A fresh judge scores it</b><span>Ten weighted dimensions with fixed anchors, and hard caps. A broken phone layout caps the page at 5/10.</span></li>
+          <li><b>Critique, then fix worst first</b><span>Every issue cites a screenshot and comes with a concrete fix. Critical issues go first.</span></li>
+          <li><b>Repeat until 8/10</b><span>It stops at 8.0 with nothing below 7. If the score stalls, it offers two new directions instead of polishing in circles.</span></li>
+        </ol>
+        <div class="card chart">
+          <div class="cap"><strong>Score by round</strong><span>Example run</span></div>
+          <svg viewBox="0 0 520 300" role="img" aria-labelledby="chart-t">
+            <title id="chart-t">Example: overall score rises from 6.4 in round 1 to 7.3 in round 2 and 8.2 in round 3, crossing the 8.0 pass line.</title>
+            <g class="ticks" font-family="var(--mono)" font-size="14" fill="var(--muted)">
+              <line x1="48" x2="500" y1="250" y2="250" stroke="var(--line)"/>
+              <line x1="48" x2="500" y1="190" y2="190" stroke="var(--line)"/>
+              <line x1="48" x2="500" y1="130" y2="130" stroke="var(--line)"/>
+              <line x1="48" x2="500" y1="70" y2="70" stroke="var(--line)"/>
+              <line x1="48" x2="500" y1="10" y2="10" stroke="var(--line)"/>
+              <text x="36" y="254" text-anchor="end">6</text><text x="36" y="194" text-anchor="end">7</text><text x="36" y="134" text-anchor="end">8</text><text x="36" y="74" text-anchor="end">9</text><text x="36" y="14" text-anchor="end">10</text>
+              <line x1="48" x2="500" y1="130" y2="130" stroke="var(--red)" stroke-dasharray="5 5"/>
+              <text x="56" y="122" text-anchor="start" fill="var(--red-ink)">pass line 8.0</text>
+              <text x="110" y="280" text-anchor="middle">Round 1</text><text x="274" y="280" text-anchor="middle">Round 2</text><text x="438" y="280" text-anchor="middle">Round 3</text>
+            </g>
+            <path d="M110 226 L274 172 L438 118 L438 250 L110 250 Z" fill="var(--red)" opacity=".08"/>
+            <polyline points="110,226 274,172 438,118" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+            <g font-family="var(--display)" font-weight="800" font-size="20" fill="var(--ink)" text-anchor="middle">
+              <circle cx="110" cy="226" r="6" fill="var(--panel)" stroke="var(--ink)" stroke-width="3"/><text x="110" y="208">6.4</text>
+              <circle cx="274" cy="172" r="6" fill="var(--panel)" stroke="var(--ink)" stroke-width="3"/><text x="274" y="154">7.3</text>
+              <circle cx="438" cy="118" r="8" fill="var(--red)"/><text x="438" y="98">8.2</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="install">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Three ways in.</h2>
+        <p>The easiest is to hand the repo to your agent. It reads the instructions, installs the right way for itself, checks the result and walks you through every skill.</p>
+      </div>
+      <div class="ways">
+        <div class="way">
+          <h3>Ask your agent</h3>
+          <p>Works in Claude Code, Codex, Cursor and other agents that can run commands.</p>
+          <div class="code"><pre id="w1" class="nohy">Install the skills from <span class="nw">https://github.com/</span><wbr><span class="nw">Jack-Attackz101/</span><wbr><span class="nw">super-design-skills</span> and tell me what I can do with them.</pre><button class="btn btn-primary" type="button" data-copy="w1">Copy</button></div>
+        </div>
+        <div class="way">
+          <h3>Terminal</h3>
+          <p>Links the skills into Claude Code and agents that read <code>~/.agents/skills</code>. Start a new session after.</p>
+          <div class="code"><pre id="w2" class="nohy" data-text="git clone {{REPO}}.git ~/super-design-skills
+~/super-design-skills/install.sh"><span class="ln">git clone <span class="nw">https://github.com/</span><wbr><span class="nw">Jack-Attackz101/</span><wbr><span class="nw">super-design-skills</span>.git ~/<wbr>super-design-skills</span><span class="ln">~/super-design-skills/<wbr>install.sh</span></pre><button class="btn btn-primary" type="button" data-copy="w2">Copy</button></div>
+        </div>
+        <div class="way">
+          <h3>Claude.ai and Cowork</h3>
+          <p>Build upload-ready zips, then add them in Customize, Skills. They follow you into Claude Code sessions on the same account.</p>
+          <div class="code"><pre id="w3" data-text="python3 scripts/make_claude_ai_zips.py"><span class="ln">python3 scripts/<wbr>make_claude_ai_zips.py</span></pre><button class="btn btn-primary" type="button" data-copy="w3">Copy</button></div>
+        </div>
+      </div>
+      <div class="rea" style="margin-top:48px">
+        <span class="big" aria-hidden="true">13</span>
+        <div><h3>REA: Reverse Engineer Anything</h3><p>The thirteenth skill ships on its own, because it brings an MCP server and its own setup. It explains how features in apps and pages you're allowed to inspect actually work, with evidence.</p></div>
+        <a class="btn btn-ghost" href="https://github.com/morluto/rea" target="_blank" rel="noopener">Get REA ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<main id="detail" class="detail" hidden></main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <p><strong style="color:var(--ink)">Super Design Skills</strong> is free and open source. The pack's own files are MIT licensed. It builds on skills by Meng To, Emil Kowalski, Leon Lin, Jakub Krehel, Elaya, INSANE0777, arla6ka, Lucas Markes, Damir Sokolovsky, codeswithroh, Benji Taylor, ConardLi and Anthropic; every module keeps its own license and credit. <a href="{{REPO}}/blob/main/CREDITS.md" target="_blank" rel="noopener">Full credits</a>.</p>
+      <p>Logos via Lobe Icons (MIT). Claude, Claude Code, Grok, Cursor, Codex and ChatGPT are trademarks of their owners, shown only to say which agents these skills work with.</p>
+    </div>
+    <div>
+      <p><a href="{{REPO}}" target="_blank" rel="noopener">GitHub repository</a></p>
+      <p><a href="{{REPO}}/blob/main/SKILLS.md" target="_blank" rel="noopener">Every skill in detail (SKILLS.md)</a></p>
+      <p><a href="https://github.com/morluto/rea" target="_blank" rel="noopener">REA, Reverse Engineer Anything</a></p>
+    </div>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const DATA = /*DATA*/;
+const $ = s => document.querySelector(s);
+const esc = t => String(t ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad = n => String(n).padStart(2, "0");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const arrow = '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7.5 3.5 11 7l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const circle = '<svg class="circle" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8c26 0 44 17 43 41-1 25-21 43-46 42C22 90 6 72 8 48 10 24 30 9 55 10" fill="none" stroke="var(--red)" stroke-width="4" stroke-linecap="round"/><text x="50" y="58" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="26" fill="var(--paper)">8/10</text></svg>';
+
+/* rotating agent names */
+(function rotator(){
+  const rot = $("#rot");
+  const items = DATA.agents.map(a => { const el = document.createElement("span"); el.className = "rot-item"; el.setAttribute("aria-hidden", "true"); el.innerHTML = a.svg + `<span>${esc(a.name)}</span>`; rot.appendChild(el); return el; });
+  let i = 0; items[0].classList.add("on");
+  if (reduce) return;
+  let timer = setInterval(next, 2200);
+  function next(){ const cur = items[i]; cur.classList.remove("on"); cur.classList.add("off"); i = (i + 1) % items.length; const nx = items[i]; nx.classList.remove("off"); void nx.offsetWidth; nx.classList.add("on"); setTimeout(() => cur.classList.remove("off"), 600); }
+  document.addEventListener("visibilitychange", () => { clearInterval(timer); if (!document.hidden) timer = setInterval(next, 2200); });
+})();
+
+/* skills grid */
+const skills = DATA.skills;
+$("#grid").innerHTML = skills.map((s, i) => {
+  if (s.external) return `<a class="skill ext" href="${esc(s.external)}" target="_blank" rel="noopener"><span class="row"><span class="no">${pad(i + 1)}</span><span class="cmd">separate install</span></span><h3>${esc(s.title)}</h3><p>${esc(s.lede)}</p><span class="foot"><span>On GitHub</span><span class="go">↗</span></span></a>`;
+  const flag = s.slug === "design";
+  return `<a class="skill${flag ? " flag" : ""}" href="#skill-${esc(s.slug)}"><span class="row"><span class="no">${pad(i + 1)}</span><span class="cmd">/${esc(s.slug)}</span></span><h3>${esc(s.title)}</h3><p>${esc(s.lede)}</p>${flag ? circle : ""}<span class="foot"><span>${s.count ? s.count + " mini skills inside" : "Standalone skill"}</span><span class="go">${arrow}</span></span></a>`;
+}).join("") + `<div class="skill get"><span class="row"><span class="no">All 12</span></span><h3>Get them in one paste</h3><p class="prompt-mini">Copy the install prompt, paste it into your agent, and it sets everything up.</p><button class="btn btn-primary" type="button" data-copy="install-prompt">Copy prompt</button></div>`;
+
+/* detail pages */
+function detail(slug){
+  const idx = skills.findIndex(s => s.slug === slug && !s.external);
+  if (idx < 0) return null;
+  const s = skills[idx];
+  const inside = skills.filter(x => !x.external);
+  const pos = inside.indexOf(s), prev = inside[(pos - 1 + inside.length) % inside.length], next = inside[(pos + 1) % inside.length];
+  const mods = s.count ? `<details class="panel mods-wrap"><summary><span><h3 style="margin:0">${s.count} mini skills inside</h3><span style="display:block;color:var(--muted);font-size:14.5px;margin-top:4px">The agent loads these only when the job calls for them. Each keeps its original author's credit and license.</span></span><span class="btn btn-ghost">Show</span></summary><div class="mods">` +
+    s.groups.map(g => `<div class="mod-group"><h4>${esc(g.g)}</h4>` + g.items.map(m => `<div class="mod"><code>${esc(m.n)}</code><span>${esc(m.d)}${m.src ? `<small>From ${DATA.urls[m.src] ? `<a href="${esc(DATA.urls[m.src])}" target="_blank" rel="noopener">${esc(m.src)}</a>` : esc(m.src)}</small>` : ""}</span></div>`).join("") + `</div>`).join("") + `</div></details>`
+    : `<div class="panel" style="margin-top:14px"><h3>Standalone</h3><p style="margin:0;color:var(--muted)">This skill is a single focused workflow with no modules.</p></div>`;
+  const PAIRS = {design:["landing-page","review","prototype"],"landing-page":["design","marketing","image"],prototype:["design","landing-page"],"scroll-site":["animate","design"],animate:["scroll-site","design"],image:["brand","landing-page"],brand:["design","image"],review:["design","landing-page"],demo:["landing-page","marketing"],marketing:["landing-page","demo"],interview:["design","landing-page"],agentation:["review","design"]};
+  const pairs = `<div class="pairs"><b>Pairs well with</b>${(PAIRS[s.slug] || []).map(x => `<a href="#skill-${x}">/${x}</a>`).join("")}</div>`;
+  return `<div class="wrap">
+    <div class="crumbs"><button type="button" data-back>← All skills</button><span style="color:var(--muted);font-size:14.5px">${pad(pos + 1)} of ${pad(inside.length)}</span></div>
+    <div class="d-hero">
+      <div class="d-head"><span class="cmd">/${esc(s.slug)}</span><h1 class="d-title">${esc(s.title)}</h1></div>
+      <div class="d-body">
+        <p class="d-lead">${esc(s.about)}</p>
+        <ol class="flow" aria-label="How it works" style="--n:${s.how.length}">${s.how.map(h => `<li>${esc(h)}</li>`).join("")}</ol>
+        ${s.slug === "design" ? `<div class="card chart d-chart">${document.querySelector("#judge .chart").innerHTML}</div>` : ""}
+        <div class="d-uses" id="d-uses"><h3>Use it when</h3><ul class="uses">${s.uses.map(u => `<li>${esc(u)}</li>`).join("")}</ul></div>
+        <div class="try" id="d-try"><h3>Try it</h3><p>After installing, type any of these in your agent.</p><ul class="tries">${s.tries.map((t, k) => `<li><code id="try-${k}">/${esc(s.slug)} ${esc(t)}</code><button class="btn btn-primary" type="button" data-copy="try-${k}">Copy</button></li>`).join("")}</ul></div>
+        <div id="d-mods">${mods}</div>
+        ${pairs}
+      </div>
+      <div class="d-side"><div class="d-side-in"><aside class="prompt d-install"><p class="prompt-label">Get all 12 skills</p><p class="prompt-text" id="cta-prompt">Install the skills from <span class="url" style="color:var(--red-ink)"><span class="nw">https://github.com/</span><wbr><span class="nw">Jack-Attackz101/</span><wbr><span class="nw">super-design-skills</span></span> and tell me what I can do with them.</p><button class="btn btn-primary" type="button" data-copy="cta-prompt">Copy prompt</button></aside><nav class="toc" aria-label="On this page"><b>On this page</b><a href="#" data-jump="d-uses">Use it when</a><a href="#" data-jump="d-try">Try it</a>${s.count ? `<a href="#" data-jump="d-mods">${s.count} mini skills inside</a>` : ""}</nav>${pairs}</div></div>
+    </div>
+    <div class="d-next"><a href="#skill-${esc(prev.slug)}"><small>← Previous</small><b>${esc(prev.title)}</b></a><a class="r" href="#skill-${esc(next.slug)}"><small>Next →</small><b>${esc(next.title)}</b></a></div>
+  </div>`;
+}
+function route(){
+  const m = location.hash.match(/^#skill-([a-z-]+)$/);
+  const html = m && detail(m[1]);
+  $("#home").hidden = !!html; $("#detail").hidden = !html;
+  if (html) { $("#detail").innerHTML = html; document.title = `${skills.find(s => s.slug === m[1]).title} · Super Design Skills`; window.scrollTo(0, 0); }
+  else { document.title = "Super Design Skills"; const t = location.hash && document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
+}
+addEventListener("hashchange", route); route();
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-back]")) { location.hash = "skills"; return; }
+  const j = e.target.closest("[data-jump]"); if (j) { e.preventDefault(); const el = document.getElementById(j.dataset.jump); if (el) { el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); const d = el.querySelector("details"); if (d) d.open = true; } return; }
+  const home = e.target.closest("[data-home]"); if (home) { e.preventDefault(); history.pushState("", "", location.pathname); route(); window.scrollTo(0, 0); }
+});
+
+/* copy buttons */
+let toastTimer;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800); }
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  const src = document.getElementById(b.dataset.copy); const text = (src.dataset.text || src.textContent).trim();
+  const label = b.textContent;
+  try { await navigator.clipboard.writeText(text); b.textContent = "Copied"; b.classList.add("done"); toast("Copied. Paste it into your agent."); }
+  catch (_) { const r = document.createRange(); r.selectNodeContents(document.getElementById(b.dataset.copy)); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); toast("Press Ctrl+C or ⌘C to copy"); }
+  setTimeout(() => { b.textContent = label; b.classList.remove("done"); }, 1600);
+});
+
+/* chart labels stay readable when the SVG scales down */
+function fitCharts(){ document.querySelectorAll(".chart svg").forEach(svg => { const w = svg.clientWidth; if (!w) return; const k = 520 / w, g = svg.querySelector(".ticks"), big = svg.querySelector("g[text-anchor='middle'][font-weight]");
+  if (g) g.setAttribute("font-size", Math.max(14, Math.min(26, 13 * k)).toFixed(1)); if (big) big.setAttribute("font-size", Math.max(20, Math.min(32, 16 * k)).toFixed(1)); }); }
+addEventListener("resize", fitCharts); fitCharts(); addEventListener("hashchange", () => requestAnimationFrame(fitCharts)); requestAnimationFrame(fitCharts);
+
+/* top bar border */
+const topBar = $("#top"); const onScroll = () => topBar.classList.toggle("scrolled", scrollY > 8); addEventListener("scroll", onScroll, { passive: true }); onScroll();
+</script>
+</body>
+</html>

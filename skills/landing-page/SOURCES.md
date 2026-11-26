@@ -4,7 +4,7 @@ This skill merges these skills. Each module keeps its original files, credits an
 
 | Module | From |
 |---|---|
-| landing-page-design | Landing Page system (uploaded by the repo owner) |
+| landing-page-design | elayadesign/ai-design-skills (MIT) |
 | landing-page | MengTo/Skills |
 | pricing-page | MengTo/Skills |
 | web-design-engineer | ConardLi/garden-skills |

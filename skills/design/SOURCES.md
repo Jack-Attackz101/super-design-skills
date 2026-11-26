@@ -32,7 +32,7 @@ This skill merges these skills. Each module keeps its original files, credits an
 | illustration-ink-sketch | MengTo/Skills |
 | illustration-line-interior | MengTo/Skills |
 | illustration-one-line | MengTo/Skills |
-| better-ui | BetterUI (uploaded by the repo owner) |
+| better-ui | jakubkrehel/skills (MIT) |
 | awwwards-inspiration | INSANE0777/Awwwards-mcp |
 | awwwards-setup | INSANE0777/Awwwards-mcp |
 | awwwards-doctor | INSANE0777/Awwwards-mcp |
