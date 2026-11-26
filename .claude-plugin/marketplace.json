@@ -1,0 +1,8 @@
+{
+  "name": "super-design-skills",
+  "description": "Twelve design skills for coding agents, packaged as one plugin.",
+  "owner": { "name": "Jack-Attackz101" },
+  "plugins": [
+    { "name": "super-design", "source": "./", "description": "Super Design with a judge loop to 8/10, landing pages, theme prototypes, scroll sites, animation, images, brand, review, demos, marketing, interviews and Agentation.", "category": "design" }
+  ]
+}

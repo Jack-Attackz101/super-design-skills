@@ -1,0 +1,10 @@
+{
+  "name": "super-design",
+  "version": "1.0.0",
+  "description": "Twelve design skills: Super Design with a judge loop to 8/10, landing pages, theme prototypes, scroll sites, animation, images, brand, review, demos, marketing, interviews and Agentation.",
+  "author": { "name": "Jack-Attackz101" },
+  "homepage": "https://github.com/Jack-Attackz101/super-design-skills",
+  "repository": "https://github.com/Jack-Attackz101/super-design-skills",
+  "license": "SEE LICENSE IN LICENSE",
+  "skills": "./skills/"
+}
